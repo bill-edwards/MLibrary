@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 class LinearModel(object):
 
@@ -45,8 +46,18 @@ class LinearModel(object):
 		self.parameters = np.zeros((number_of_parameters, 1))
 
 	def plot_cost_history(self):
-		pass
+		plt.plot(self.cost_history)
 
 
 def generate_polynomial_features(features, degree):
-	return features
+	num_features = features.size
+	products = [np.array([feature]) for feature in features] # Create a list of 1-element arrays, one for each feature.
+	print products
+	for power in range(1, degree):
+		for i in range(num_features):
+			ith_products = []
+			for row in products[i:]: # The ith feature multiplies its own products, and all products deriving from features j > i.
+				ith_products.append(features[i]*row)
+			products[i] = np.hstack(ith_products)
+		print products
+	return np.hstack(products)
