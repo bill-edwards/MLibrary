@@ -49,15 +49,22 @@ class LinearModel(object):
 		plt.plot(self.cost_history)
 
 
+# Example with two raw features, generating cubic features.
+# [1, x, y] # features
+# ->
+# [[1], [x], [y]] # products before loop
+# [[1, x, y], [x^2, xy], [y^2]] # products after 1st loop
+# [[1, x, y, x^2, xy, y^2], [x^3, x^2y, xy^2], [y^3]] # products after 2nd loop
+# ->
+# [1, x, y, x^2, xy, y^2, x^3, x^2y, xy^2, y^3] # return value
+
 def generate_polynomial_features(features, degree):
 	num_features = features.size
 	products = [np.array([feature]) for feature in features] # Create a list of 1-element arrays, one for each feature.
-	print products
 	for power in range(1, degree):
 		for i in range(num_features):
 			ith_products = []
 			for row in products[i:]: # The ith feature multiplies its own products, and all products deriving from features j > i.
 				ith_products.append(features[i]*row)
 			products[i] = np.hstack(ith_products)
-		print products
 	return np.hstack(products)
