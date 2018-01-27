@@ -50,6 +50,15 @@ class LinearModel(object):
 		plt.show()
 
 
+class BinaryLogisticClassifier(LinearModel):
+
+	def model(self, features, parameters):
+		return sigmoid(np.dot(features, parameters))
+
+	def predict(self, inputs):
+		return 1 if (np.dot(features, parameters) > 0) else 0
+
+
 # Example with two raw features, generating cubic features.
 # [1, x, y] # features
 # ->
@@ -70,3 +79,6 @@ def generate_polynomial_features(features, degree):
 	# 			ith_products.append(features[i]*row)
 	# 		products[i] = np.hstack(ith_products)
 	# return np.hstack(products)
+
+def sigmoid(z):
+	return 1/(1 + np.exp(-z))
