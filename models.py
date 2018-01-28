@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import utils.sigmoid as sigmoid
 
 class LinearModel(object):
 
@@ -80,5 +81,3 @@ def generate_polynomial_features(features, degree):
 	# 		products[i] = np.hstack(ith_products)
 	# return np.hstack(products)
 
-def sigmoid(z):
-	return 1/(1 + np.exp(-z))
