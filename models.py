@@ -1,15 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import sigmoid
 
 class LinearModel(object):
 
 	def __init__(self, training_data, polynomial_degree=1):
 		self.training_data = training_data
-		self.raw_training_inputs, self.training_outputs = training_data
+		self.raw_training_inputs = training_data[0].reshape((training_data[0].size, 1))
+		self.training_outputs = training_data[1].reshape((training_data[1].size, 1))
 		self.polynomial_degree = polynomial_degree
 		self.training_inputs = self.process_raw_inputs(self.raw_training_inputs)
-		number_of_inputs = self.training_inputs.shape[1]
-		self.initialise_parameters(number_of_inputs)
+		self.initialise_parameters()
 
 	def describe(self):
 		print 'Model Details'
@@ -42,12 +43,21 @@ class LinearModel(object):
 		self.parameter_history, self.cost_history = optimiser.optimise(cost, self.parameters)
 		self.parameters = self.parameter_history[-1]
 
-	def initialise_parameters(self, number_of_parameters):
-		self.parameters = np.zeros((number_of_parameters, 1))
+	def initialise_parameters(self):
+		self.parameters = np.zeros((self.training_inputs.shape[1], 1))
 
 	def plot_cost_history(self):
 		plt.plot(self.cost_history)
 		plt.show()
+
+
+class BinaryLogisticClassifier(LinearModel):
+
+	def model(self, features, parameters):
+		return sigmoid(np.dot(features, parameters))
+
+	def predict(self, inputs):
+		return 1 if (np.dot(features, parameters) > 0) else 0
 
 
 # Example with two raw features, generating cubic features.
@@ -70,3 +80,4 @@ def generate_polynomial_features(features, degree):
 	# 			ith_products.append(features[i]*row)
 	# 		products[i] = np.hstack(ith_products)
 	# return np.hstack(products)
+
